@@ -8,7 +8,7 @@
 #include <memory>
 #include <array>
 
-class Picker {
+class BoundingBox {
 public:
 	struct Margin {
 		std::array<int, 4> value_container;
@@ -32,8 +32,8 @@ public:
 		Margin margin;
 	};
 	
-	Picker();
-	~Picker();
+	BoundingBox();
+	~BoundingBox();
 
 	//set texture of the Picker
 	//true: can read and set 'imagename'
