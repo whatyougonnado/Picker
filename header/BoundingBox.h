@@ -35,7 +35,7 @@ public:
 	BoundingBox();
 	~BoundingBox();
 
-	//set texture of the Picker
+	//set texture of the BoundingBox
 	//true: can read and set 'imagename'
 	//false: cannot read 'imagename'
 	bool setTex(const std::string& imagename);
