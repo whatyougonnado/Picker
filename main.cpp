@@ -6,6 +6,8 @@
 
 #include <igl/unproject_onto_mesh.h>
 
+#include <Picker.h>
+
 #include <fstream>
 #include <string>
 int main(int argc, char *argv[])
@@ -23,10 +25,14 @@ int main(int argc, char *argv[])
     //photographer.addCameraToPosition(-1.0f, 1.0f, -2.0f, 5.0f);
 
     // 3_ 3 front
-	photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
-    photographer.addCameraToPosition(0.0f, 1.0f, 3.0f, 12.0f);
-    photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
-    photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+	//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
+    //photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+    //photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+
+	// 4_ 3 front
+	photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 2.0f);
+	photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 2.0f);
+	photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 2.0f);
 
 	
 	//Picker picker();
@@ -43,19 +49,6 @@ int main(int argc, char *argv[])
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	int fid;
 	Eigen::Vector3f bc;
 	Eigen::Vector4f viewport;
@@ -65,12 +58,13 @@ int main(int argc, char *argv[])
 	viewport(3) = 1024;
 	
 	std::vector<Camera> image_cameras = photographer.getImageCameras();
-	Eigen::Matrix4f view, proj;
+	//model matrix == I
+	Eigen::Matrix4d modelview, proj;
 
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			view(i, j) = (image_cameras[0].getGlViewMatrix())[i][j];
-			std::cout << "(" << i << ", " << j << "): " << view(i, j) << std::endl;
+			modelview(i, j) = (image_cameras[0].getGlViewMatrix())[i][j];
+			std::cout << "(" << i << ", " << j << "): " << modelview(i, j) << std::endl;
 		}
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -79,35 +73,38 @@ int main(int argc, char *argv[])
 			std::cout << "(" << i << ", " << j << "): " << proj(i, j) << std::endl;
 		}
 	}
-
-	std::cout << view.transpose() << std::endl;
+	std::cout << modelview.transpose() << std::endl;
 	std::cout << proj.transpose() << std::endl;
-	std::cout << viewport << std::endl;
+	std::cout << "photographer.getDefaultCameraPosition(): " << photographer.getDefaultCameraPosition() << std::endl;
 
-
-	for (int y = 0; y < 1024; ++y) {
-		int current = -1;
-		for (int x = 0; x < 1024; ++x) {
-			if (igl::unproject_onto_mesh(Eigen::Vector2f(x, viewport(3) - y), view.transpose(),
-				proj.transpose(), viewport, object.getNormalizedVertices(), object.getFaces(), fid, bc))
-			{
-				if (current != fid) {
-					current = fid;
-				}
-				else {
-					continue;
-				}
-				// paint hit red
-				//C.row(fid) << 1, 0, 0;
-				//viewer.data().set_colors(C);
-				out << "(" << x << ", " << y << "): " << fid << std::endl;
-			}
-		}
-		out << std::endl;
-	}
+	Eigen::MatrixXd MVP = proj*modelview;
+	std::cout << "object.getEGNormalizedVertices()" << object.getEGNormalizedVerticesWithUV() << std::endl;
+	Picker MyPicker(MVP, object.getEGNormalizedVerticesWithUV(), object.getFaces(), photographer.getDefaultProjectPlaneNormal());
+	//for (int y = 0; y < 1024; ++y) {
+	//	int current = -1;
+	//	for (int x = 0; x < 1024; ++x) {
+	//		if (igl::unproject_onto_mesh(Eigen::Vector2f(x, viewport(3) - y), model.transpose(),
+	//			proj.transpose(), viewport, object.getNormalizedVertices(), object.getFaces(), fid, bc))
+	//		{
+	//			if (current != fid) {
+	//				current = fid;
+	//			}
+	//			else {
+	//				continue;
+	//			}
+	//			// paint hit red
+	//			//C.row(fid) << 1, 0, 0;
+	//			//viewer.data().set_colors(C);
+	//			out << "(" << x << ", " << y << "): " << fid << std::endl;
+	//		}
+	//	}
+	//	out << std::endl;
+	//}
 	out.close();
 	photographer.renderToImages(argv[3]);
 	photographer.saveImageCamerasParamsCV(argv[3]);
 
 	photographer.viewScene();
+	int a = 5;
+	std::cout << a << std::endl;
 }
