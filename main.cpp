@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include <igl/unproject_onto_mesh.h>
+#include <igl/ray_mesh_intersect.cpp>
 
 #include <Picker.h>
 
@@ -12,8 +12,9 @@
 #include <string>
 int main(int argc, char *argv[])
 {
-    GeneralMesh object(argv[1], argv[2]);
-
+	GeneralMesh object(argv[1], argv[2]);
+	GeneralMesh object2(argv[1], argv[2]);
+	
     std::cout << "Mesh Loaded!" << std::endl;
 
     Photographer photographer(&object);
@@ -25,14 +26,14 @@ int main(int argc, char *argv[])
     //photographer.addCameraToPosition(-1.0f, 1.0f, -2.0f, 5.0f);
 
     // 3_ 3 front
-	//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
-    //photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
-    //photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+	photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
+    photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+    photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
 
 	// 4_ 3 front
-	photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 2.0f);
-	photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 2.0f);
-	photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 2.0f);
+	//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 2.0f);
+	//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 2.0f);
+	//photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 2.0f);
 
 	
 	//Picker picker();
@@ -60,30 +61,30 @@ int main(int argc, char *argv[])
 	std::vector<Camera> image_cameras = photographer.getImageCameras();
 	//model matrix == I
 	Eigen::Matrix4d modelview, proj;
-
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			modelview(i, j) = (image_cameras[0].getGlViewMatrix())[i][j];
+			modelview(i, j) = (image_cameras[1].getGlViewMatrix())[i][j];
 			std::cout << "(" << i << ", " << j << "): " << modelview(i, j) << std::endl;
 		}
 	}
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			proj(i, j) = (image_cameras[0].getGlProjectionMatrix())[i][j];
+			proj(i, j) = (image_cameras[1].getGlProjectionMatrix())[i][j];
 			std::cout << "(" << i << ", " << j << "): " << proj(i, j) << std::endl;
 		}
 	}
-	std::cout << modelview.transpose() << std::endl;
-	std::cout << proj.transpose() << std::endl;
 	std::cout << "photographer.getDefaultCameraPosition(): " << photographer.getDefaultCameraPosition() << std::endl;
 
-	Eigen::MatrixXd MVP = proj*modelview;
-	std::cout << "object.getEGNormalizedVertices()" << object.getEGNormalizedVerticesWithUV() << std::endl;
-	Picker MyPicker(MVP, object.getEGNormalizedVerticesWithUV(), object.getFaces(), photographer.getDefaultProjectPlaneNormal());
-	//for (int y = 0; y < 1024; ++y) {
+	//don't know why it is tranposed already?
+	Eigen::MatrixXd MVP = (proj.transpose())*(modelview.transpose());
+	
+	Picker MyPicker(MVP, object2.getNormalizedVertices(), object2.getFaces(), Eigen::RowVector3d(1.0f, 0.0f, -1.0f));
+
+	for(int i=0;)
+	//for (int y = 0; y < 300; ++y) {
 	//	int current = -1;
-	//	for (int x = 0; x < 1024; ++x) {
-	//		if (igl::unproject_onto_mesh(Eigen::Vector2f(x, viewport(3) - y), model.transpose(),
+	//	for (int x = 0; x < 300; ++x) {
+	//		if (igl::unproject_onto_mesh(Eigen::Vector2f(x, viewport(3) - y), modelview.transpose(),
 	//			proj.transpose(), viewport, object.getNormalizedVertices(), object.getFaces(), fid, bc))
 	//		{
 	//			if (current != fid) {
@@ -105,6 +106,4 @@ int main(int argc, char *argv[])
 	photographer.saveImageCamerasParamsCV(argv[3]);
 
 	photographer.viewScene();
-	int a = 5;
-	std::cout << a << std::endl;
 }
