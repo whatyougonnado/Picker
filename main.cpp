@@ -4,9 +4,9 @@
 
 #include <iostream>
 
-#include <igl/ray_mesh_intersect.cpp>
+//#include <igl/ray_mesh_intersect.cpp>
 
-#include <Picker.h>
+#include <OBJController.h>
 
 #include <fstream>
 #include <string>
@@ -52,11 +52,6 @@ int main(int argc, char *argv[])
 
 	int fid;
 	Eigen::Vector3f bc;
-	Eigen::Vector4f viewport;
-	viewport(0) = 0;
-	viewport(1) = 0;
-	viewport(2) = 1024;
-	viewport(3) = 1024;
 	
 	std::vector<Camera> image_cameras = photographer.getImageCameras();
 	//model matrix == I
@@ -64,23 +59,20 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
 			modelview(i, j) = (image_cameras[1].getGlViewMatrix())[i][j];
-			std::cout << "(" << i << ", " << j << "): " << modelview(i, j) << std::endl;
-		}
-	}
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
 			proj(i, j) = (image_cameras[1].getGlProjectionMatrix())[i][j];
-			std::cout << "(" << i << ", " << j << "): " << proj(i, j) << std::endl;
 		}
 	}
-	std::cout << "photographer.getDefaultCameraPosition(): " << photographer.getDefaultCameraPosition() << std::endl;
 
-	//don't know why it is tranposed already?
-	Eigen::MatrixXd MVP = (proj.transpose())*(modelview.transpose());
+	//
+	const Eigen::Matrix4d MVP = (proj.transpose())*(modelview.transpose());
+	const Eigen::Vector4d viewport(0, 0, 1024, 1024);
+	const std::string full_path = "D:/Documents/Thesis/CaptureController/CaptureController/the.obj";
+
+	OBJController MyOBJController(MVP, object2.getNormalizedVertices(), object2.getFaces(), Eigen::RowVector3d(1.0f, 0.0f, -1.0f), viewport);
+	MyOBJController.saveWindowFittedOutput(full_path);
+	//
+
 	
-	Picker MyPicker(MVP, object2.getNormalizedVertices(), object2.getFaces(), Eigen::RowVector3d(1.0f, 0.0f, -1.0f));
-
-	for(int i=0;)
 	//for (int y = 0; y < 300; ++y) {
 	//	int current = -1;
 	//	for (int x = 0; x < 300; ++x) {
