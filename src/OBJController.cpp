@@ -41,6 +41,11 @@ Eigen::Matrix4d OBJController::getViewPortMatrix() {
 	return ret;
 }
 
+void OBJController::receiveOBJ(Eigen::MatrixXd& verts_at_window, Eigen::MatrixXi& faces_front) const {
+	verts_at_window = verts_at_window_;
+	faces_front = faces_front_;
+}
+
 void OBJController::saveWindowFittedOutput(std::string full_path) {
 	igl::writeOBJ(full_path, verts_at_window_, faces_front_);
 }
@@ -93,10 +98,6 @@ void OBJController::backfaceCulling_() {
 	for (int i = 0; (i < size_face) && (cnt < size_front_face); ++i) {
 		if (cache_front_face.get()[i]) {
 			faces_front_.row(cnt) = faces_.row(i);
-			//face_front(ccnt, 0) = faces_(i, 0);
-			//face_front(ccnt, 1) = faces_(i,1);
-			//face_front(ccnt, 2) = faces_(i, 2);
-
 			cnt++;
 		}
 	}
@@ -104,8 +105,15 @@ void OBJController::backfaceCulling_() {
 }
 
 void OBJController::screenizedVertices_() {
-	Eigen::Matrix4d _viewport;
+	Eigen::Matrix4d _viewport_matrix;
+	Eigen::RowVector3d pivot;
 	
-	_viewport= getViewPortMatrix();
-	HomogeneousMultiplication(_viewport, verts_projected_, verts_at_window_);
+	_viewport_matrix= getViewPortMatrix();
+	HomogeneousMultiplication(_viewport_matrix, verts_projected_, verts_at_window_);
+
+	pivot(0) = viewport_(0);
+	pivot(1) = viewport_(1);
+	pivot(2) = 0;
+
+	verts_at_window_ = verts_at_window_.rowwise() + pivot;
 }

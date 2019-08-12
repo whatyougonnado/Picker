@@ -4,12 +4,12 @@
 
 #include <iostream>
 
-//#include <igl/ray_mesh_intersect.cpp>
-
 #include <OBJController.h>
+#include <Picking.h>
 
 #include <fstream>
 #include <string>
+
 int main(int argc, char *argv[])
 {
 	GeneralMesh object(argv[1], argv[2]);
@@ -35,24 +35,15 @@ int main(int argc, char *argv[])
 	//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 2.0f);
 	//photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 2.0f);
 
-	
-	//Picker picker();
-	//picker.setTex();
-	//picker.saveModifiedTex_();
-	//picker.getModifiedTex_();
-	////picker.removePadding_();
-	//shader.setUniform("view", camera.getGlViewMatrix());
-	//shader.setUniform("projection", camera.getGlProjectionMatrix());
-	//shader.setUniform("eye_pos", camera.getPosition());
+	photographer.renderToImages(argv[3]);
+	photographer.saveImageCamerasParamsCV(argv[3]);
 
-	std::string in_line;
-	std::ofstream out("test.txt");
+	//photographer.viewScene();
+	//--------------------------------------------------------------------------------------
 
 
 
-	int fid;
-	Eigen::Vector3f bc;
-	
+	//--------------------------------------------------------------------------------------
 	std::vector<Camera> image_cameras = photographer.getImageCameras();
 	//model matrix == I
 	Eigen::Matrix4d modelview, proj;
@@ -63,16 +54,26 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	Eigen::MatrixXd _V;
+	Eigen::MatrixXi _F;
 	//
 	const Eigen::Matrix4d MVP = (proj.transpose())*(modelview.transpose());
 	const Eigen::Vector4d viewport(0, 0, 1024, 1024);
+	const Eigen::RowVector3d camera_look_vector(0.0f, 0.0f, -1.0f);
 	const std::string full_path = "D:/Documents/Thesis/CaptureController/CaptureController/the.obj";
 
-	OBJController MyOBJController(MVP, object2.getNormalizedVertices(), object2.getFaces(), Eigen::RowVector3d(1.0f, 0.0f, -1.0f), viewport);
+	OBJController MyOBJController(MVP, object2.getNormalizedVertices(), object2.getFaces(), camera_look_vector, viewport);
 	MyOBJController.saveWindowFittedOutput(full_path);
-	//
-
+	MyOBJController.receiveOBJ(_V, _F);
 	
+	//Picking;
+	Picking MyPicking(_V, _F, viewport);
+	MyPicking.run();
+	//MyPicking.makeTexture("D:/Data/GigaKorea/scans_obj/mman_coloring.txt", "D:/Data/GigaKorea/scans_obj/color_map.png");
+
+	//int fid;
+	//Eigen::Vector3f bc;
+	//std::ofstream out("test.txt");
 	//for (int y = 0; y < 300; ++y) {
 	//	int current = -1;
 	//	for (int x = 0; x < 300; ++x) {
@@ -93,9 +94,5 @@ int main(int argc, char *argv[])
 	//	}
 	//	out << std::endl;
 	//}
-	out.close();
-	photographer.renderToImages(argv[3]);
-	photographer.saveImageCamerasParamsCV(argv[3]);
-
-	photographer.viewScene();
+	//out.close();
 }

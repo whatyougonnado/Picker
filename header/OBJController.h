@@ -16,6 +16,7 @@ public:
 
 	Eigen::Matrix4d getViewPortMatrix();
 	void saveWindowFittedOutput(std::string full_path);
+	void receiveOBJ(Eigen::MatrixXd& verts_at_window, Eigen::MatrixXi& faces_front) const;
 private:
 	OBJController();
 	void HomogeneousMultiplication(const Eigen::Matrix4d& left_matrix, const Eigen::MatrixXd& cache, Eigen::MatrixXd& output);
