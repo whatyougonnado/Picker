@@ -33,16 +33,27 @@ public:
 	};
 	
 	BoundingBox();
+	BoundingBox(const std::string& imagename);
 	~BoundingBox();
 
 	//set texture of the BoundingBox
 	//true: can read and set 'imagename'
 	//false: cannot read 'imagename'
-	bool setTex(const std::string& imagename);
 	bool checkFileExist_(const char * filename);
+	void init();
 	int saveModifiedTex(const std::string& save_imagename);
-	//getModifiedTex_();
-	void removePadding_(int min_margin_left = 0, int min_margin_right = 0, int min_margin_top = 0, int min_margin_bottom = 0);
+
+	//if line is all black, consider line as padding line
+	void getMargin_(std::array<int, 3> lead_pixel);
+	void removePadding_();
+
+	//imageinfo before
+	void setTexInfo1_();
+	int setTexData1_(const std::string& imagename);
+
+	//imageinfo after
+	void setTexInfo2_();
+	int setTexData2_(const std::string& imagename);
 private:
 	std::shared_ptr<ImageInfo> image_info_;
 };

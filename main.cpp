@@ -10,10 +10,17 @@
 #include <fstream>
 #include <string>
 
+#include <igl/unproject_ray.h>
+#include <igl/unproject_onto_mesh.h>
+
 int main(int argc, char *argv[])
 {
+	std::string load_imagename = "view_1.png";
+	std::string save_imagename = "fix_view_1.png";
+
+	std::string load_full_path, save_full_path, load_full_path3, save_full_path3;
 	GeneralMesh object(argv[1], argv[2]);
-	GeneralMesh object2(argv[1], argv[2]);
+	//GeneralMesh object2(argv[1], argv[2]);
 	
     std::cout << "Mesh Loaded!" << std::endl;
 
@@ -38,13 +45,17 @@ int main(int argc, char *argv[])
 	photographer.renderToImages(argv[3]);
 	photographer.saveImageCamerasParamsCV(argv[3]);
 
-	//photographer.viewScene();
+	photographer.viewScene(false);
 	//--------------------------------------------------------------------------------------
-
-
+	
+	load_full_path = argv[3] + load_imagename;
+	save_full_path = argv[3] + save_imagename;
+	BoundingBox boundingbox(load_full_path);
+	boundingbox.saveModifiedTex(save_full_path);
 
 	//--------------------------------------------------------------------------------------
-	std::vector<Camera> image_cameras = photographer.getImageCameras();
+	/*
+	{std::vector<Camera> image_cameras = photographer.getImageCameras();
 	//model matrix == I
 	Eigen::Matrix4d modelview, proj;
 	for (int i = 0; i < 4; ++i) {
@@ -61,15 +72,15 @@ int main(int argc, char *argv[])
 	const Eigen::Vector4d viewport(0, 0, 1024, 1024);
 	const Eigen::RowVector3d camera_look_vector(0.0f, 0.0f, -1.0f);
 	const std::string full_path = "D:/Documents/Thesis/CaptureController/CaptureController/the.obj";
-
-	OBJController MyOBJController(MVP, object2.getNormalizedVertices(), object2.getFaces(), camera_look_vector, viewport);
-	MyOBJController.saveWindowFittedOutput(full_path);
-	MyOBJController.receiveOBJ(_V, _F);
+	}*/
+	//OBJController MyOBJController(MVP, object2.getNormalizedVertices(), object2.getFaces(), camera_look_vector, viewport);
+	//MyOBJController.saveWindowFittedOutput(full_path);
+	//MyOBJController.receiveOBJ(_V, _F);
 	
 	//Picking;
-	Picking MyPicking(_V, _F, viewport);
-	MyPicking.run();
-	//MyPicking.makeTexture("D:/Data/GigaKorea/scans_obj/mman_coloring.txt", "D:/Data/GigaKorea/scans_obj/color_map.png");
+	//Picking MyPicking(_V, _F, viewport);
+	//Picking::makeTexture("D:/Data/GigaKorea/scans_obj/mman_coloring.txt", "D:/Data/GigaKorea/scans_obj/color_map.png");
+	//MyPicking.run();
 
 	//int fid;
 	//Eigen::Vector3f bc;
@@ -95,4 +106,5 @@ int main(int argc, char *argv[])
 	//	out << std::endl;
 	//}
 	//out.close();
+	std::cout << "finish" << std::endl;
 }

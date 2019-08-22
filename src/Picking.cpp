@@ -5,10 +5,28 @@ Picking::Picking(Eigen::MatrixXd verts, Eigen::MatrixXi faces, Eigen::Vector4d v
 Picking::~Picking() {
 }
 
-void Picking::makeTexture(const std::string& color_csv_full_path, const std::string& save_texture_full_path) {
+bool Picking::fileExist(const std::string& full_path) {
+	std::ifstream f(full_path.c_str());
+	if (f.good()) {
+		f.close();
+		return true;
+	}
+	else {
+		f.close();
+		return false;
+	}
+}
+
+int Picking::makeTexture(const std::string& color_csv_full_path, const std::string& save_texture_full_path, bool overwrite) {
 	std::vector<int> color;
 	std::string line;
 	std::ifstream in_file;
+
+	if (fileExist(save_texture_full_path))
+	{
+		return 0;
+	}
+
 	in_file.open(color_csv_full_path);
 	while (std::getline(in_file, line)) {
 		unsigned int token_idx = 0;
@@ -52,9 +70,12 @@ void Picking::makeTexture(const std::string& color_csv_full_path, const std::str
 	stbi_write_png(save_texture_full_path.c_str(), WIDTH, HEIGHT, CHANNEL_NUM, data, WIDTH * CHANNEL_NUM);
 
 	delete[] data;
+
+	return 1;
 }
 
 void Picking::run() {
+	readPallet_();
 	getCenterVertex_();
 	getVisualizeFaces_();
 }
@@ -97,14 +118,34 @@ void Picking::getVisualizeFaces_() {
 	}
 }
 
-void Picking::readPicture(std::string full_path) {
+void findColor_() {
 
+}
+
+void Picking::readPallet_(const std::string& map_full_path, const std::string& color_full_path) {
+	if (!fileExist(map_full_path)) {
+		std::cout << "Picking::readPallet_: Make a new Pallet(" << color_full_path << ")" << std::endl;
+		makeTexture(color_full_path, map_full_path);
+	}
+
+	readTex_(map_full_path);
+}
+
+void Picking::readTex_(const std::string& full_path) {
+	if (!fileExist(full_path)) {
+		std::cout << "Picking::readTex_: ERROR, File is not exist(" << full_path << ")" << std::endl;
+		exit(1);
+	}
+	else {
+		pallet_info_.data = stbi_load(full_path.c_str(), &(pallet_info_.width), &(pallet_info_.height), &(pallet_info_.n_channels), 0);
+	}
 }
 
 void Picking::getFacesColor_(std::string origin_full_path) {
 
 }
 
-void Picking::writeParsingTexture(std::string full_path) {
-
+template <typename T>
+void Picking::setSharedPtr(std::shared_ptr<T>& original_ptr, std::shared_ptr<T>& temp_ptr) {
+	swap(original_ptr, temp_ptr);
 }
