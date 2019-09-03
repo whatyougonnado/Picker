@@ -1,11 +1,11 @@
 #include <BoundingBox.h>
 
 BoundingBox::BoundingBox() {
-	init();
+	init_();
 }
 
 BoundingBox::BoundingBox(const std::string& imagename) {
-	init();
+	init_();
 	setTexData1_(imagename);
 }
 BoundingBox::~BoundingBox() {
@@ -18,8 +18,8 @@ bool BoundingBox::checkFileExist_(const char * filename){
 	return infile.good();
 }
 
-void BoundingBox::init() {
-	//init state-machine
+void BoundingBox::init_() {
+	//init_ state-machine
 	stbi_flip_vertically_on_write(false);
 	stbi_set_flip_vertically_on_load(false);
 
@@ -137,7 +137,7 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 		image_info_->margin.bottom = (image_info_->before_height - 1) - row;
 	}
 
-	std::cout << image_info_->margin.top << " " << image_info_->margin.bottom << " " << image_info_->margin.left << " " << image_info_->margin.right << std::endl;
+	//std::cout << image_info_->margin.top << " " << image_info_->margin.bottom << " " << image_info_->margin.left << " " << image_info_->margin.right << std::endl;
 }
 void BoundingBox::removePadding_() {
 	setTexInfo2_();
@@ -182,6 +182,12 @@ void BoundingBox::setTexInfo2_() {
 	image_info_->after_data = new unsigned char[image_info_->after_width * image_info_->after_height * image_info_->n_channels];
 }
 int BoundingBox::setTexData2_(const std::string& save_imagename) {
+	if (checkFileExist_(save_imagename.c_str())) {
+		std::cout << "BoundingBox: " + save_imagename + "  file exist" << std::endl;
+
+		return 1;
+	}
+	
 	int fail;
 	fail = stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->n_channels, image_info_->after_data, 0);
 	return fail;

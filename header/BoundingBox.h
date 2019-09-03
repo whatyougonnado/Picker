@@ -40,7 +40,7 @@ public:
 	//true: can read and set 'imagename'
 	//false: cannot read 'imagename'
 	bool checkFileExist_(const char * filename);
-	void init();
+	void init_();
 	int saveModifiedTex(const std::string& save_imagename);
 
 	//if line is all black, consider line as padding line
