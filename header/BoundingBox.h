@@ -36,24 +36,27 @@ public:
 	BoundingBox(const std::string& imagename);
 	~BoundingBox();
 
+	int saveTexBounded(const std::string& save_imagename);
+	
+	int setTexData(const std::string& imagename);
+
+private:
+	std::shared_ptr<ImageInfo> image_info_;
+
 	//set texture of the BoundingBox
 	//true: can read and set 'imagename'
 	//false: cannot read 'imagename'
 	bool checkFileExist_(const char * filename);
+
 	void init_();
-	int saveModifiedTex(const std::string& save_imagename);
 
 	//if line is all black, consider line as padding line
 	void getMargin_(std::array<int, 3> lead_pixel);
 	void removePadding_();
 
 	//imageinfo before
-	void setTexInfo1_();
-	int setTexData1_(const std::string& imagename);
-
+	void setTexInfoBefore_();
 	//imageinfo after
-	void setTexInfo2_();
-	int setTexData2_(const std::string& imagename);
-private:
-	std::shared_ptr<ImageInfo> image_info_;
+	void setTexInfoBounded_();
+	int saveTexData_(const std::string& imagename);
 };

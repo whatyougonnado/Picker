@@ -6,7 +6,7 @@ BoundingBox::BoundingBox() {
 
 BoundingBox::BoundingBox(const std::string& imagename) {
 	init_();
-	setTexData1_(imagename);
+	setTexData(imagename);
 }
 BoundingBox::~BoundingBox() {
 	delete[] image_info_->before_data;
@@ -26,7 +26,7 @@ void BoundingBox::init_() {
 	std::shared_ptr<ImageInfo> _temp(new ImageInfo);
 	std::swap(image_info_, _temp);
 }
-int BoundingBox::saveModifiedTex(const std::string& save_imagename) {
+int BoundingBox::saveTexBounded(const std::string& save_imagename) {
 	enum _Color {
 		R = 0, G, B
 	};
@@ -36,7 +36,7 @@ int BoundingBox::saveModifiedTex(const std::string& save_imagename) {
 	padding_pixel[R] = padding_pixel[G] = padding_pixel[B] = 0;
 	getMargin_(padding_pixel);
 	removePadding_();
-	fail = setTexData2_(save_imagename);
+	fail = saveTexData_(save_imagename);
 	return fail;
 }
 
@@ -140,7 +140,7 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 	//std::cout << image_info_->margin.top << " " << image_info_->margin.bottom << " " << image_info_->margin.left << " " << image_info_->margin.right << std::endl;
 }
 void BoundingBox::removePadding_() {
-	setTexInfo2_();
+	setTexInfoBounded_();
 
 	int row;
 	int cnt = 0;
@@ -162,7 +162,7 @@ void BoundingBox::removePadding_() {
 
 }
 
-int BoundingBox::setTexData1_(const std::string& imagename) {
+int BoundingBox::setTexData(const std::string& imagename) {
 
 	if (!checkFileExist_(imagename.c_str())) {
 		throw std::exception("BoundingBox: input file doesn't exist");
@@ -176,12 +176,12 @@ int BoundingBox::setTexData1_(const std::string& imagename) {
 
 	return 0;
 }
-void BoundingBox::setTexInfo2_() {
+void BoundingBox::setTexInfoBounded_() {
 	image_info_->after_width = image_info_->before_width - (image_info_->margin.left + image_info_->margin.right);
 	image_info_->after_height = image_info_->before_height - (image_info_->margin.top + image_info_->margin.bottom);
 	image_info_->after_data = new unsigned char[image_info_->after_width * image_info_->after_height * image_info_->n_channels];
 }
-int BoundingBox::setTexData2_(const std::string& save_imagename) {
+int BoundingBox::saveTexData_(const std::string& save_imagename) {
 	if (checkFileExist_(save_imagename.c_str())) {
 		std::cout << "BoundingBox: " + save_imagename + "  file exist" << std::endl;
 
