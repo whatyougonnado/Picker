@@ -1,5 +1,5 @@
-#include <Photographer/Photographer.h>
-#include <GeneralMesh/GeneralMesh.h>
+#include <Photographer.h>
+#include <GeneralMesh.h>
 #include <BoundingBox.h>
 #include <PictureComparison.h>
 
@@ -49,10 +49,11 @@ int main(int argc, char *argv[])
 	photographer.saveImageCamerasParamsCV(argv[4]);
 
 
-	photographer.viewScene(false);
+	photographer.viewScene(true);
 
 	photographer.renderToImages(argv[3]);
 	photographer.saveImageCamerasParamsCV(argv[3]);
+	photographer.viewScene(true);
 	//--------------------------------------------------------------------------------------
 	//if the face id: 0 is on boundary, then the problem is occuring
 

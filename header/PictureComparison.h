@@ -13,7 +13,7 @@
 #include <algorithm> // for_each
 
 #include <algorithm>
-#include <GeneralMesh/GeneralMesh.h>
+#include <GeneralMesh.h>
 
 #include <fstream>
 #include <sstream>
