@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
 
 	std::string load_full_path, save_full_path, load_full_path2, save_full_path2;
 	GeneralMesh object(argv[1], argv[2]);
-	GeneralMesh object2(argv[1], argv[2]);
 	
     std::cout << "Mesh Loaded!" << std::endl;
 	
@@ -68,9 +67,17 @@ int main(int argc, char *argv[])
 	boundingbox.saveTexBounded(save_full_path2);
 
 	//--------------------------------------------------------------------------------------
-	//PictureComparison myPictureComparison(500000, save_full_path, save_full_path2);
-	//myPictureComparison.setColorTable("D:/Data/GigaKorea/scans_obj/mman_coloring_fit.txt");
-	//myPictureComparison.computeIdColor();
+	vector<string> face_color;
+	map<string, array<float, 3>> color_table;
+	
+	PictureComparison myPictureComparison(object.getFaces().rows(), save_full_path, save_full_path2);
+	myPictureComparison.setColorTable("D:/Data/GigaKorea/scans_obj/mman_coloring_fit.txt");
+	myPictureComparison.computeIdColor();
+
+	face_color = myPictureComparison.getFaceColor();
+	color_table = myPictureComparison.getColorTableDouble();
+	//--------------------------------------------------------------------------------------
+
 	//--------------------------------------------------------------------------------------
 
 	//--------------------------------------------------------------------------------------
