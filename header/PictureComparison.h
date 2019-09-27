@@ -30,9 +30,11 @@ public:
 	int decodeNormalizedNumeralSystem(glm::ivec3 val, int from = 255); // base is decimal
 	void computeIdColor();
 
+	void setTex(const std::string & tex_pic_name, const std::string & tex_faceid_name);
+
 	vector<string> getFaceColor() { return face_color_; }
 	map<string, array<unsigned char, 3>> getColorTable() const { return color_table_; };
-	map<string, array<float, 3>> getColorTableDouble() const;
+	map<string, array<float, 3>> getColorTableFloat() const;
 
 private:
 	int face_size_;

@@ -1,5 +1,6 @@
 #include <Photographer.h>
 #include <GeneralMesh.h>
+#include <ParsingMesh.h>
 #include <BoundingBox.h>
 #include <PictureComparison.h>
 
@@ -23,63 +24,147 @@ int main(int argc, char *argv[])
 
 	std::string load_full_path, save_full_path, load_full_path2, save_full_path2;
 	GeneralMesh object(argv[1], argv[2]);
-	
-    std::cout << "Mesh Loaded!" << std::endl;
-	
-    Photographer photographer(&object);
 
-    // 2_2 front, 2 back
-    //photographer.addCameraToPosition(0.0f, 1.0f, 3.0f, 4.0f);
-    //photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
-    //photographer.addCameraToPosition(0.0f, -1.0f, -2.0f, 5.0f);
-    //photographer.addCameraToPosition(-1.0f, 1.0f, -2.0f, 5.0f);
+	std::cout << "Mesh Loaded!" << std::endl;
 
-    // 3_ 3 front
-	photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
-    photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
-    photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+	Photographer photographer(&object);
 
-	// 4_ 3 front
-	//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 2.0f);
-	//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 2.0f);
-	//photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 2.0f);
+	// 2_2 front, 2 back
+	//photographer.addCameraToPosition(0.0f, 1.0f, 3.0f, 4.0f);
+	//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+	//photographer.addCameraToPosition(0.0f, -1.0f, -2.0f, 5.0f);
+	//photographer.addCameraToPosition(-1.0f, 1.0f, -2.0f, 5.0f);
 
-	
-	photographer.renderToImages(argv[4], Shader::FACEID_SHADER, Shader::FACEID_SHADER);
-	photographer.saveImageCamerasParamsCV(argv[4]);
-
-
-	photographer.viewScene(true);
-
-	photographer.renderToImages(argv[3]);
-	photographer.saveImageCamerasParamsCV(argv[3]);
-	photographer.viewScene(true);
+ //   // 3_ 3 front
+	//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
+	//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+	//photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
 	//--------------------------------------------------------------------------------------
+	//for (float z = -0.1; z < 0.105; z += 0.05) {
+	//	for (float y = -0.1; y < 0.105; y += 0.05) {
+	//		for (float x = -0.1; x < 0.105; x += 0.05) {
+	//			photographer.addCameraToPosition(0.0f + x, 0.0f + y, 1.0f + z, 4.0f);
+	//		}
+	//	}
+	//}
+	//for (float z = -0.1; z < 0.105; z += 0.05) {
+	//	for (float y = -0.1; y < 0.105; y += 0.05) {
+	//		for (float x = -0.1; x < 0.105; x += 0.05) {
+	//			photographer.addCameraToPosition(1.0f + x, -0.5f + y, 2.0f + z, 4.0f);
+	//		}
+	//	}
+	//}
+	//for (float z = -0.1; z < 0.105; z += 0.05) {
+	//	for (float y = -0.1; y < 0.105; y += 0.05) {
+	//		for (float x = -0.1; x < 0.105; x += 0.05) {
+	//			photographer.addCameraToPosition(-1.0f + x, 0.0f + y, 1.0f + z, 4.0f);
+	//		}
+	//	}
+	//}
+
+
+
+	//for (float z = -0.1; z < 0.105; z += 0.05) {
+	//	for (float y = -0.1; y < 0.105; y += 0.05) {
+	//		for (float x = -0.1; x < 0.105; x += 0.05) {
+	//			photographer.addCameraToPosition(-0.0f + x, -0.0f + y, -1.0f + z, 4.0f);
+	//		}
+	//	}
+	//}
+	//for (float z = -0.1; z < 0.105; z += 0.05) {
+	//	for (float y = -0.1; y < 0.105; y += 0.05) {
+	//		for (float x = -0.1; x < 0.105; x += 0.05) {
+	//			photographer.addCameraToPosition(-1.0f + x, 0.5f + y, -2.0f + z, 4.0f);
+	//		}
+	//	}
+	//}
+	//for (float z = -0.1; z < 0.105; z += 0.05) {
+	//	for (float y = -0.1; y < 0.105; y += 0.05) {
+	//		for (float x = -0.1; x < 0.105; x += 0.05) {
+	//			photographer.addCameraToPosition(1.0f + x, -0.0f + y, -1.0f + z, 4.0f);
+	//		}
+	//	}
+	//}
+	//////--------------------------------------------------------------------------------------
+	////// 4_ 3 front
+	//////photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 2.0f);
+	//////photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 2.0f);
+	//////photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 2.0f);
+
+
+	//////--------------------------------------------------------------------------------------
+	//photographer.setShader(Shader::ShaderTypes::FACEID_SHADER, Shader::ShaderTypes::FACEID_SHADER);
+	//photographer.renderToImages(argv[4]);
+	//photographer.saveImageCamerasParamsCV(argv[4]);
+
+
+	////photographer.viewScene(false);
+
+	//photographer.setShader(Shader::ShaderTypes::FULL_SHADER, Shader::ShaderTypes::FULL_SHADER);
+	//photographer.renderToImages(argv[3]);
+	//photographer.saveImageCamerasParamsCV(argv[3]);
+	//photographer.viewScene(false);
+
+	////--------------------------------------------------------------------------------------
 	//if the face id: 0 is on boundary, then the problem is occuring
+	//for (int i = 1; i <= 750; ++i) {
 
-	load_full_path = argv[3] + load_imagename;
-	save_full_path = argv[3] + save_imagename;
-	BoundingBox boundingbox(load_full_path);
-	boundingbox.saveTexBounded(save_full_path);
+	//	load_imagename = "/view_"+ std::to_string(i) +".png";
+	//	save_imagename = "/fix_view_"+ std::to_string(i) +".jpg";
+	//	load_full_path = argv[3] + load_imagename;
+	//	save_full_path = argv[3] + save_imagename;
+	//	BoundingBox boundingbox(load_full_path);
+	//	boundingbox.saveTexBounded(save_full_path);
 
-	load_full_path2 = argv[4] + load_imagename;
-	save_full_path2 = argv[4] + save_imagename;
-	boundingbox.setTexData(load_full_path2);
-	boundingbox.saveTexBounded(save_full_path2);
+	//	load_full_path2 = argv[4] + load_imagename;
+	//	save_full_path2 = argv[4] + save_imagename;
+	//	boundingbox.setTexData(load_full_path2);
+	//	boundingbox.saveTexBounded(save_full_path2);
+	//}
 
-	//--------------------------------------------------------------------------------------
+	////--------------------------------------------------------------------------------------
 	vector<string> face_color;
 	map<string, array<float, 3>> color_table;
-	
+
+	vector<map<string, int>> face_color_counter_;
 	PictureComparison myPictureComparison(object.getFaces().rows(), save_full_path, save_full_path2);
-	myPictureComparison.setColorTable("D:/Data/GigaKorea/scans_obj/mman_coloring_fit.txt");
-	myPictureComparison.computeIdColor();
+	myPictureComparison.setColorTable("D:/Data/GigaKorea/scans_obj/mman_coloring_fit_fit2.txt");
+
+	for (int i = 1; i <= 2; ++i) {
+		save_imagename = "/fix_view_" + std::to_string(i) + ".png";
+		save_full_path = "D:/Documents/Thesis/CaptureController/output/parse"+ save_imagename;
+		save_imagename = "/fix_view_" + std::to_string(i) + ".png";//jpg id -> error
+		save_full_path2 = argv[4] + save_imagename;
+		myPictureComparison.setTex(save_full_path, save_full_path2);
+		myPictureComparison.computeIdColor();
+
+	}
+	////--------------------------------------------------------------------------------------
 
 	face_color = myPictureComparison.getFaceColor();
-	color_table = myPictureComparison.getColorTableDouble();
+	color_table = myPictureComparison.getColorTableFloat();
+	color_table["BackGround"][0] = 0.5f;
+	color_table["BackGround"][1] = 0.5f;
+	color_table["BackGround"][2] = 0.5f;
+	color_table["UpperClothes"][0] = 1.f;
+	color_table["UpperClothes"][1] = 1.f;
+	color_table["UpperClothes"][2] = 1.f;
+
+	std::cout << "argv[1]: " << argv[1] << std::endl;
+	ParsingMesh myParsingObj(argv[1], face_color, color_table);
+	std::cout << "argv[3]: " << argv[3] << std::endl;
+	Photographer photographerParsing(&myParsingObj);
+	photographerParsing.setShader(Shader::ShaderTypes::MOSAIC_SHADER, Shader::ShaderTypes::MOSAIC_SHADER);
+	// 3_ 3 front
+	photographerParsing.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
+	photographerParsing.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+	photographerParsing.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+
+	photographerParsing.renderToImages(argv[3]);
+	photographerParsing.saveImageCamerasParamsCV(argv[3]);
+	photographerParsing.viewScene(true);
 	//--------------------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------------------
 
 	//--------------------------------------------------------------------------------------
 	//int x, y, n_channels, x_out, y_out;
