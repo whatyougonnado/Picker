@@ -26,7 +26,7 @@ void BoundingBox::init_() {
 	std::shared_ptr<ImageInfo> _temp(new ImageInfo);
 	std::swap(image_info_, _temp);
 }
-int BoundingBox::saveTexBounded(const std::string& save_imagename) {
+int BoundingBox::saveTexBounded(const std::string& save_imagename, bool isPNG) {
 	enum _Color {
 		R = 0, G, B
 	};
@@ -36,7 +36,19 @@ int BoundingBox::saveTexBounded(const std::string& save_imagename) {
 	padding_pixel[R] = padding_pixel[G] = padding_pixel[B] = 0;
 	getMargin_(padding_pixel);
 	removePadding_();
-	fail = saveTexData_(save_imagename);
+	if (isPNG) {
+
+		fail = saveTexData_(save_imagename);
+	}
+	else {
+		if (checkFileExist_(save_imagename.c_str())) {
+			std::cout << "BoundingBox: " + save_imagename + "  file exist" << std::endl;
+
+			return 1;
+		}
+
+		fail = stbi_write_jpg(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->n_channels, image_info_->after_data, 0);
+	}
 	return fail;
 }
 

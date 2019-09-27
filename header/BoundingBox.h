@@ -36,8 +36,7 @@ public:
 	BoundingBox(const std::string& imagename);
 	~BoundingBox();
 
-	int saveTexBounded(const std::string& save_imagename);
-	
+	int saveTexBounded(const std::string& save_imagename, bool isPNG=true);
 	int setTexData(const std::string& imagename);
 
 private:
