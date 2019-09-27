@@ -40,8 +40,10 @@ void PictureComparison::setColorTable(const std::string& full_path)
 	string in_line;
 	ifstream in;
 	in.open(full_path);
-	sort_size_ = 0;
 	
+	sort_size_ = 0;
+	color_table_.clear();
+
 	while (getline(in,in_line)) {
 		token_list = ssplit(in_line, ',');
 		color_table_.insert(pair<string, array<unsigned char, 3>>{token_list[0], array<unsigned char, 3>{
@@ -50,7 +52,6 @@ void PictureComparison::setColorTable(const std::string& full_path)
 	}
 	in.close();
 
-	initFaceColorTable_();
 }
 
 int PictureComparison::decodeNormalizedNumeralSystem(glm::ivec3 val, int from)
@@ -71,10 +72,11 @@ void PictureComparison::computeIdColor()
 
 	for (int k = 0; k < full_size; k += 3) {
 		for (int l = 0; l < 3; ++l) {
-			color[l] = (int)tex_picture_.data[k + l];
+			color[l] = (int)tex_picture_.data[k/3];
 			encoded_id[l] = (int)tex_faceid_.data[k + l];
 			//cout << encoded_id[l] << endl;
 		}
+
 		//cout << color[0] << ", " << color[1] << ", " << color[2] << endl;
 		color_name = getSynchronizedColorName_(color[0], color[1], color[2]);
 
@@ -161,7 +163,7 @@ std::string PictureComparison::getSynchronizedColorName_(unsigned char r, unsign
 	return ret;
 }
 
-void PictureComparison::initFaceColorTable_()
+void PictureComparison::initFaceColorTable()
 {
 	string color_name;
 

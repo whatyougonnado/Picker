@@ -189,6 +189,6 @@ int BoundingBox::saveTexData_(const std::string& save_imagename) {
 	}
 	
 	int fail;
-	fail = stbi_write_jpg(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->n_channels, image_info_->after_data, 0);
+	fail = stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->n_channels, image_info_->after_data, 0);
 	return fail;
 }

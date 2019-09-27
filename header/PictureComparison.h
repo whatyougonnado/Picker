@@ -35,6 +35,7 @@ public:
 	vector<string> getFaceColor() { return face_color_; }
 	map<string, array<unsigned char, 3>> getColorTable() const { return color_table_; };
 	map<string, array<float, 3>> getColorTableFloat() const;
+	void initFaceColorTable();
 
 private:
 	int face_size_;
@@ -49,6 +50,5 @@ private:
 
 	std::string getSynchronizedColorName_(unsigned char r, unsigned char g, unsigned char b);
 
-	void initFaceColorTable_();
 	void extractFaceColor_();
 };

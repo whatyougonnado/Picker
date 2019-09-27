@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 	//for (int i = 1; i <= 750; ++i) {
 
 	//	load_imagename = "/view_"+ std::to_string(i) +".png";
-	//	save_imagename = "/fix_view_"+ std::to_string(i) +".jpg";
+	//  save_imagename = "/fix_view_" + std::to_string(i) + ".png";
 	//	load_full_path = argv[3] + load_imagename;
 	//	save_full_path = argv[3] + save_imagename;
 	//	BoundingBox boundingbox(load_full_path);
@@ -129,8 +129,9 @@ int main(int argc, char *argv[])
 	vector<map<string, int>> face_color_counter_;
 	PictureComparison myPictureComparison(object.getFaces().rows(), save_full_path, save_full_path2);
 	myPictureComparison.setColorTable("D:/Data/GigaKorea/scans_obj/mman_coloring_fit_fit2.txt");
-
-	for (int i = 1; i <= 2; ++i) {
+	myPictureComparison.initFaceColorTable();
+	for (int i = 1; i <= 750; ++i) {
+		
 		save_imagename = "/fix_view_" + std::to_string(i) + ".png";
 		save_full_path = "D:/Documents/Thesis/CaptureController/output/parse"+ save_imagename;
 		save_imagename = "/fix_view_" + std::to_string(i) + ".png";//jpg id -> error
@@ -142,13 +143,9 @@ int main(int argc, char *argv[])
 	////--------------------------------------------------------------------------------------
 
 	face_color = myPictureComparison.getFaceColor();
+//	color_table = myPictureComparison.getColorTableFloat();
+	myPictureComparison.setColorTable("D:/Data/GigaKorea/scans_obj/mman_coloring_fit_fit.txt");
 	color_table = myPictureComparison.getColorTableFloat();
-	color_table["BackGround"][0] = 0.5f;
-	color_table["BackGround"][1] = 0.5f;
-	color_table["BackGround"][2] = 0.5f;
-	color_table["UpperClothes"][0] = 1.f;
-	color_table["UpperClothes"][1] = 1.f;
-	color_table["UpperClothes"][2] = 1.f;
 
 	std::cout << "argv[1]: " << argv[1] << std::endl;
 	ParsingMesh myParsingObj(argv[1], face_color, color_table);
