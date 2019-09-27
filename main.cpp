@@ -28,15 +28,22 @@ int main(int argc, char *argv[])
 	std::cout << "Mesh Loaded!" << std::endl;
 
 	Photographer photographer(&object);
-	
+
 	bool first = false;
+	bool second = false;
     // 3_ 3 front
 	//--------------------------------------------------------------------------------------
-	//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
-	//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
-	//photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+	photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
+	photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+	photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+	photographer.addCameraToPosition(-0.0f, -0.0f, -1.0f, 4.0f);
+	photographer.addCameraToPosition(-1.0f, 0.5f, -2.0f, 4.0f);
+	photographer.addCameraToPosition(1.0f, -0.0f, -1.0f, 4.0f);
+	photographer.setShader(Shader::ShaderTypes::FULL_SHADER, Shader::ShaderTypes::FULL_SHADER);
+	photographer.renderToImages(argv[3]);
+	photographer.saveImageCamerasParamsCV(argv[3]);
 	//--------------------------------------------------------------------------------------
-	if (first) {
+	if (first && second) {
 		photographer.addCameraToPositionAround(
 			0.0f, 0.1f, 0.05f,
 			0.0f, 0.1f, 0.05f,
@@ -106,7 +113,7 @@ int main(int argc, char *argv[])
 	
 	////
 	//--------------------------------------------------------------------------------------
-	if (!first) {
+	if ((!first) && second) {
 		vector<string> face_color;
 		map<string, array<float, 3>> color_table;
 
@@ -141,20 +148,20 @@ int main(int argc, char *argv[])
 		photographerParsing.addCameraToPosition(-1.0f, 0.5f, -2.0f, 4.0f);
 		photographerParsing.addCameraToPosition(1.0f, -0.0f, -1.0f, 4.0f);
 
-		photographerParsing.renderToImages(argv[3]);
-		photographerParsing.saveImageCamerasParamsCV(argv[3]);
+		photographerParsing.renderToImages(argv[6]);
+		photographerParsing.saveImageCamerasParamsCV(argv[6]);
 
-		Photographer photographerVisual(&object);
-		photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
-		photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
-		photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
-		photographer.addCameraToPosition(-0.0f, -0.0f, -1.0f, 4.0f);
-		photographer.addCameraToPosition(-1.0f, 0.5f, -2.0f, 4.0f);
-		photographer.addCameraToPosition(1.0f, -0.0f, -1.0f, 4.0f);
+		//Photographer photographerVisual(&object);
+		//photographer.addCameraToPosition(0.0f, 0.0f, 1.0f, 4.0f);
+		//photographer.addCameraToPosition(1.0f, -0.5f, 2.0f, 4.0f);
+		//photographer.addCameraToPosition(-1.0f, 0.0f, 1.0f, 4.0f);
+		//photographer.addCameraToPosition(-0.0f, -0.0f, -1.0f, 4.0f);
+		//photographer.addCameraToPosition(-1.0f, 0.5f, -2.0f, 4.0f);
+		//photographer.addCameraToPosition(1.0f, -0.0f, -1.0f, 4.0f);
 
-		photographerVisual.setShader(Shader::ShaderTypes::FULL_SHADER, Shader::ShaderTypes::FULL_SHADER);
-		photographerVisual.renderToImages(argv[5]);
-		photographerVisual.saveImageCamerasParamsCV(argv[5]);
+		//photographerVisual.setShader(Shader::ShaderTypes::FULL_SHADER, Shader::ShaderTypes::FULL_SHADER);
+		//photographerVisual.renderToImages(argv[5]);
+		//photographerVisual.saveImageCamerasParamsCV(argv[5]);
 		//photographerParsing.viewScene(true);
 	}
 	//--------------------------------------------------------------------------------------
