@@ -118,9 +118,8 @@ void PictureComparison::computeIdColor()
 
 void PictureComparison::setTex(const std::string & tex_pic_name, const std::string & tex_faceid_name)
 {
-	GeneralMesh myGeneralMesh;
-	myGeneralMesh.readTex(tex_picture_, tex_pic_name);
-	myGeneralMesh.readTex(tex_faceid_, tex_faceid_name);
+	GeneralMeshTexture::readTex(tex_picture_, tex_pic_name);
+	GeneralMeshTexture::readTex(tex_faceid_, tex_faceid_name);
 }
 
 map<string, array<float, 3>> PictureComparison::getColorTableFloat() const

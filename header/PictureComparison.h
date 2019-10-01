@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <GeneralMesh.h>
+#include <GeneralMeshTexture.h>
 
 #include <fstream>
 #include <sstream>
@@ -40,7 +41,7 @@ public:
 private:
 	int face_size_;
 	int sort_size_;
-	GeneralMesh::TextureInfo tex_picture_, tex_faceid_;
+	GeneralMeshTexture::TextureInfo tex_picture_, tex_faceid_;
 
 	map<string, array<unsigned char, 3>> color_table_;
 	

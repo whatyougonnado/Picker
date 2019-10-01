@@ -8,6 +8,8 @@
 #include <memory>
 #include <array>
 
+#include <Visualizer.h>
+
 class BoundingBox {
 public:
 	struct Margin {
@@ -17,31 +19,17 @@ public:
 		int& top = value_container[2];
 		int& bottom = value_container[3];
 	};
-
-	//before --//eliminate margin//--> after
-	struct ImageInfo {
-		//image to array: row first
-		unsigned char *before_data;
-		int before_width;
-		int before_height;
-		int n_channels;
-
-		unsigned char *after_data;
-		int after_width;
-		int after_height;
-		Margin margin;
-	};
 	
 	BoundingBox();
 	BoundingBox(const std::string& imagename);
 	~BoundingBox();
 
-	int saveTexBounded(const std::string& save_imagename, bool isPNG=true);
+	int saveTexBounded(const std::string& save_imagename);
 	int setTexData(const std::string& imagename);
 
 private:
-	std::shared_ptr<ImageInfo> image_info_;
-
+	std::shared_ptr<Visualizer::ImageInfo> image_info_;
+	Margin margin_;
 	//set texture of the BoundingBox
 	//true: can read and set 'imagename'
 	//false: cannot read 'imagename'

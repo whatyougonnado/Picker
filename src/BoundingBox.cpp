@@ -23,10 +23,10 @@ void BoundingBox::init_() {
 	stbi_flip_vertically_on_write(false);
 	stbi_set_flip_vertically_on_load(false);
 
-	std::shared_ptr<ImageInfo> _temp(new ImageInfo);
+	std::shared_ptr<Visualizer::ImageInfo> _temp(new Visualizer::ImageInfo);
 	std::swap(image_info_, _temp);
 }
-int BoundingBox::saveTexBounded(const std::string& save_imagename, bool isPNG) {
+int BoundingBox::saveTexBounded(const std::string& save_imagename) {
 	enum _Color {
 		R = 0, G, B
 	};
@@ -36,19 +36,9 @@ int BoundingBox::saveTexBounded(const std::string& save_imagename, bool isPNG) {
 	padding_pixel[R] = padding_pixel[G] = padding_pixel[B] = 0;
 	getMargin_(padding_pixel);
 	removePadding_();
-	if (isPNG) {
 
-		fail = saveTexData_(save_imagename);
-	}
-	else {
-		if (checkFileExist_(save_imagename.c_str())) {
-			std::cout << "BoundingBox: " + save_imagename + "  file exist" << std::endl;
+	fail = Visualizer::saveTexData(image_info_, save_imagename);
 
-			return 1;
-		}
-
-		fail = stbi_write_jpg(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->n_channels, image_info_->after_data, 0);
-	}
 	return fail;
 }
 
@@ -60,9 +50,9 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 	{
 		bool isSameColor = true;
 		int col;
-		for (col = 0; col < (image_info_->before_width * image_info_->n_channels) && isSameColor; col += 3) {
+		for (col = 0; col < (image_info_->before_width * image_info_->before_n_channels) && isSameColor; col += 3) {
 			for (int j = 0; (j < image_info_->before_height) && isSameColor; ++j) {
-				int local_R_idx = j * image_info_->before_width * image_info_->n_channels + (col + 0);
+				int local_R_idx = j * image_info_->before_width * image_info_->before_n_channels + (col + 0);
 				int local_G_idx = local_R_idx + 1;
 				int local_B_idx = local_R_idx + 2;
 
@@ -76,16 +66,16 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 			}
 		}
 		col -= 3;
-		image_info_->margin.left = col / image_info_->n_channels;
+		margin_.left = col / image_info_->before_n_channels;
 	}
 
 	//right
 	{
 		bool isSameColor = true;
 		int col;
-		for (col = (image_info_->before_width - 1) * image_info_->n_channels; (col >= 0) && isSameColor; col -= image_info_->n_channels) {
+		for (col = (image_info_->before_width - 1) * image_info_->before_n_channels; (col >= 0) && isSameColor; col -= image_info_->before_n_channels) {
 			for (int j = 0; (j < image_info_->before_height) && isSameColor; ++j) {
-				int local_R_idx = j * image_info_->before_width * image_info_->n_channels + (col + 0);
+				int local_R_idx = j * image_info_->before_width * image_info_->before_n_channels + (col + 0);
 				int local_G_idx = local_R_idx + 1;
 				int local_B_idx = local_R_idx + 2;
 
@@ -98,8 +88,8 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 				}
 			}
 		}
-		col += image_info_->n_channels;
-		image_info_->margin.right = ((image_info_->before_width - 1) * image_info_->n_channels - col) / image_info_->n_channels;
+		col += image_info_->before_n_channels;
+		margin_.right = ((image_info_->before_width - 1) * image_info_->before_n_channels - col) / image_info_->before_n_channels;
 	}
 
 	//top
@@ -108,8 +98,8 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 
 		int row;
 		for (row = 0; (row < image_info_->before_height) && isSameColor; ++row) {
-			for (int i = 0; (i < image_info_->before_width * image_info_->n_channels) && isSameColor; i += image_info_->n_channels) {
-				int local_R_idx = row * image_info_->before_width * image_info_->n_channels + (i + 0);
+			for (int i = 0; (i < image_info_->before_width * image_info_->before_n_channels) && isSameColor; i += image_info_->before_n_channels) {
+				int local_R_idx = row * image_info_->before_width * image_info_->before_n_channels + (i + 0);
 				int local_G_idx = local_R_idx + 1;
 				int local_B_idx = local_R_idx + 2;
 
@@ -123,7 +113,7 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 			}
 		}
 		--row;
-		image_info_->margin.top = row;
+		margin_.top = row;
 	}
 
 	//bottom
@@ -131,8 +121,8 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 		bool isSameColor = true;
 		int row;
 		for (row = image_info_->before_height - 1; (row >= 0) && isSameColor; --row) {
-			for (int i = 0; (i < image_info_->before_width * image_info_->n_channels) && isSameColor; i += image_info_->n_channels) {
-				int local_R_idx = row * image_info_->before_width * image_info_->n_channels + (i + 0);
+			for (int i = 0; (i < image_info_->before_width * image_info_->before_n_channels) && isSameColor; i += image_info_->before_n_channels) {
+				int local_R_idx = row * image_info_->before_width * image_info_->before_n_channels + (i + 0);
 				int local_G_idx = local_R_idx + 1;
 				int local_B_idx = local_R_idx + 2;
 
@@ -146,19 +136,19 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
 			}
 		}
 		++row;
-		image_info_->margin.bottom = (image_info_->before_height - 1) - row;
+		margin_.bottom = (image_info_->before_height - 1) - row;
 	}
 
-	//std::cout << image_info_->margin.top << " " << image_info_->margin.bottom << " " << image_info_->margin.left << " " << image_info_->margin.right << std::endl;
+	//std::cout << margin_.top << " " << margin_.bottom << " " << margin_.left << " " << margin_.right << std::endl;
 }
 void BoundingBox::removePadding_() {
 	setTexInfoBounded_();
 
 	int row;
 	int cnt = 0;
-	for (row = image_info_->margin.top; (row < image_info_->margin.top + image_info_->after_height); ++row) {
-		for (int i = image_info_->margin.left * image_info_->n_channels; (i < (image_info_->margin.left + image_info_->after_width) * image_info_->n_channels); i += image_info_->n_channels) {
-			int local_R_idx = row * image_info_->before_width * image_info_->n_channels + (i + 0);
+	for (row = margin_.top; (row < margin_.top + image_info_->after_height); ++row) {
+		for (int i = margin_.left * image_info_->after_n_channels; (i < (margin_.left + image_info_->after_width) * image_info_->after_n_channels); i += image_info_->after_n_channels) {
+			int local_R_idx = row * image_info_->before_width * image_info_->after_n_channels + (i + 0);
 			int local_G_idx = local_R_idx + 1;
 			int local_B_idx = local_R_idx + 2;
 
@@ -184,14 +174,15 @@ int BoundingBox::setTexData(const std::string& imagename) {
 
 	
 	
-	image_info_->before_data = stbi_load(imagename.c_str(), &(image_info_->before_width), &(image_info_->before_height), &(image_info_->n_channels), 0);
+	image_info_->before_data = stbi_load(imagename.c_str(), &(image_info_->before_width), &(image_info_->before_height), &(image_info_->before_n_channels), 0);
 
 	return 0;
 }
 void BoundingBox::setTexInfoBounded_() {
-	image_info_->after_width = image_info_->before_width - (image_info_->margin.left + image_info_->margin.right);
-	image_info_->after_height = image_info_->before_height - (image_info_->margin.top + image_info_->margin.bottom);
-	image_info_->after_data = new unsigned char[image_info_->after_width * image_info_->after_height * image_info_->n_channels];
+	image_info_->after_width = image_info_->before_width - (margin_.left + margin_.right);
+	image_info_->after_height = image_info_->before_height - (margin_.top + margin_.bottom);
+	image_info_->after_n_channels = image_info_->before_n_channels;
+	image_info_->after_data = new unsigned char[image_info_->after_width * image_info_->after_height * image_info_->after_n_channels];
 }
 int BoundingBox::saveTexData_(const std::string& save_imagename) {
 	if (checkFileExist_(save_imagename.c_str())) {
@@ -199,8 +190,22 @@ int BoundingBox::saveTexData_(const std::string& save_imagename) {
 
 		return 1;
 	}
-	
-	int fail;
-	fail = stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->n_channels, image_info_->after_data, 0);
+
+	Visualizer::ImageExtension extension = Visualizer::getType(save_imagename);
+	int fail = 1;
+
+	switch (extension)
+	{
+	case Visualizer::ImageExtension::BMP:
+		break;
+	case Visualizer::ImageExtension::JPG:
+		break;
+	case Visualizer::ImageExtension::PNG:
+		fail = stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->after_n_channels, image_info_->after_data, 0);
+
+		break;
+	default:
+		break;
+	}
 	return fail;
 }

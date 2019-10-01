@@ -39,6 +39,12 @@ public:
 	static ImageExtension getType(const std::string& full_path);
 	static std::vector< std::vector<std::string> > readCSV(const std::string& full_path);
 	static std::vector <std::string> readFile(const std::string& full_path);
+	static bool saveTexData(std::shared_ptr<ImageInfo> image_info, const std::string& full_path);
+
+	//set texture of the BoundingBox
+	//true: can read and set 'imagename'
+	//false: cannot read 'imagename'
+	static bool checkFileExist(const char * filename);
 
 	bool saveTexVisualize(const std::string & reference_file_path, const std::string& save_imagename);
 	int setTexData(const std::string& full_path);
@@ -48,11 +54,6 @@ public:
 
 private:
 	std::shared_ptr<ImageInfo> image_info_;
-
-	//set texture of the BoundingBox
-	//true: can read and set 'imagename'
-	//false: cannot read 'imagename'
-	bool checkFileExist_(const char * filename);
 
 	void init_();
 

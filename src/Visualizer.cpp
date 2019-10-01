@@ -78,7 +78,33 @@ std::vector<std::string> Visualizer::readFile(const std::string & full_path)
 	return cache;
 }
 
-bool Visualizer::checkFileExist_(const char * filename) {
+bool Visualizer::saveTexData(std::shared_ptr<ImageInfo> image_info, const std::string& full_path) {
+	if (checkFileExist(full_path.c_str())) {
+		std::cout << "Visualizer: " + full_path + "  file exist" << std::endl;
+
+		return 1;
+	}
+
+	bool isFail;
+	ImageExtension extension = getType(full_path);
+	switch (extension)
+	{
+	case ImageExtension::BMP:
+		isFail = (bool)stbi_write_bmp(full_path.c_str(), image_info->after_width, image_info->after_height, image_info->after_n_channels, image_info->after_data);
+		break;
+	case ImageExtension::JPG:
+		isFail = (bool)stbi_write_jpg(full_path.c_str(), image_info->after_width, image_info->after_height, image_info->after_n_channels, image_info->after_data, 0);
+		break;
+	case ImageExtension::PNG:
+		isFail = (bool)stbi_write_png(full_path.c_str(), image_info->after_width, image_info->after_height, image_info->after_n_channels, image_info->after_data, 0);
+		break;
+	default:
+		break;
+	}
+	return isFail;
+}
+
+bool Visualizer::checkFileExist(const char * filename) {
 	std::ifstream infile(filename);
 	return infile.good();
 }
@@ -124,7 +150,7 @@ void Visualizer::changeColor_() {
 
 int Visualizer::setTexData(const std::string& full_path) {
 
-	if (!checkFileExist_(full_path.c_str())) {
+	if (!checkFileExist(full_path.c_str())) {
 		throw std::exception("Visualizer: input file doesn't exist");
 
 		return 1;
@@ -164,30 +190,4 @@ void Visualizer::setTexInfoVisualize_() {
 	image_info_->after_height = image_info_->before_height;
 	image_info_->after_n_channels = 3; // R,G,B
 	image_info_->after_data = new unsigned char[image_info_->after_width * image_info_->after_height * image_info_->after_n_channels];
-}
-
-bool Visualizer::saveTexData_(const std::string& save_imagename) {
-	if (checkFileExist_(save_imagename.c_str())) {
-		std::cout << "Visualizer: " + save_imagename + "  file exist" << std::endl;
-
-		return 1;
-	}
-
-	bool isFail;
-	ImageExtension extension = getType(save_imagename);
-	switch (extension)
-	{
-	case ImageExtension::BMP:
-		isFail = (bool)stbi_write_bmp(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->after_n_channels, image_info_->after_data);
-		break;
-	case ImageExtension::JPG:
-		isFail = (bool)stbi_write_jpg(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->after_n_channels, image_info_->after_data, 0);
-		break;
-	case ImageExtension::PNG:
-		isFail = (bool)stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->after_n_channels, image_info_->after_data, 0);
-		break;
-	default:
-		break;
-	}
-	return isFail;
 }
