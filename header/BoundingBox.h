@@ -8,7 +8,7 @@
 #include <memory>
 #include <array>
 
-#include <Visualizer.h>
+#include <GeneralUtility.h>
 
 class BoundingBox {
 public:
@@ -28,7 +28,7 @@ public:
 	int setTexData(const std::string& imagename);
 
 private:
-	std::shared_ptr<Visualizer::ImageInfo> image_info_;
+	std::shared_ptr<mg::ImageInfo> image_info_;
 	Margin margin_;
 	//set texture of the BoundingBox
 	//true: can read and set 'imagename'

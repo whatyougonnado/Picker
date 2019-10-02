@@ -23,7 +23,7 @@ void BoundingBox::init_() {
 	stbi_flip_vertically_on_write(false);
 	stbi_set_flip_vertically_on_load(false);
 
-	std::shared_ptr<Visualizer::ImageInfo> _temp(new Visualizer::ImageInfo);
+	std::shared_ptr<mg::ImageInfo> _temp(new mg::ImageInfo);
 	std::swap(image_info_, _temp);
 }
 int BoundingBox::saveTexBounded(const std::string& save_imagename) {
@@ -37,7 +37,7 @@ int BoundingBox::saveTexBounded(const std::string& save_imagename) {
 	getMargin_(padding_pixel);
 	removePadding_();
 
-	fail = Visualizer::saveTexData(image_info_, save_imagename);
+	fail = mg::saveTexData(image_info_, save_imagename);
 
 	return fail;
 }
@@ -191,16 +191,16 @@ int BoundingBox::saveTexData_(const std::string& save_imagename) {
 		return 1;
 	}
 
-	Visualizer::ImageExtension extension = Visualizer::getType(save_imagename);
+	mg::ImageExtension extension = mg::getType(save_imagename);
 	int fail = 1;
 
 	switch (extension)
 	{
-	case Visualizer::ImageExtension::BMP:
+	case mg::ImageExtension::BMP:
 		break;
-	case Visualizer::ImageExtension::JPG:
+	case mg::ImageExtension::JPG:
 		break;
-	case Visualizer::ImageExtension::PNG:
+	case mg::ImageExtension::PNG:
 		fail = stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->after_n_channels, image_info_->after_data, 0);
 
 		break;

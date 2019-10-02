@@ -1,5 +1,11 @@
 #include "PictureComparison.h"
 
+PictureComparison::PictureComparison(int face_size) : face_size_(face_size)
+{
+	face_color_counter_.resize(face_size_);
+	face_color_.resize(face_size_);
+}
+
 PictureComparison::PictureComparison(int face_size, const std::string & tex_pic_name, const std::string & tex_faceid_name): face_size_(face_size)
 {
 	setTex(tex_pic_name, tex_faceid_name);
@@ -21,19 +27,6 @@ PictureComparison::~PictureComparison() {
 	//delete[] face_color_counter_;
 }
 
-std::vector<std::string> PictureComparison::ssplit(std::string input, char criteria) {
-
-	std::vector<std::string> ret;
-	std::istringstream ss(input);
-	std::string token;
-
-	while (std::getline(ss, token, criteria)) {
-		ret.push_back(token);
-	}
-
-	return ret;
-}
-
 void PictureComparison::setColorTable(const std::string& full_path)
 {
 	std::vector<std::string> token_list;
@@ -45,7 +38,7 @@ void PictureComparison::setColorTable(const std::string& full_path)
 	color_table_.clear();
 
 	while (getline(in,in_line)) {
-		token_list = ssplit(in_line, ',');
+		token_list = mg::ssplit(in_line, ',');
 		color_table_.insert(pair<string, array<unsigned char, 3>>{token_list[0], array<unsigned char, 3>{
 			(unsigned char)atoi(token_list[1].c_str()), (unsigned char)atoi(token_list[2].c_str()), (unsigned char)atoi(token_list[3].c_str())}});
 		++sort_size_;
@@ -108,7 +101,7 @@ void PictureComparison::computeIdColor()
 			//std::cout  << id  << ", " << color_name <<": " << face_color_counter_[id][color_name] << std::endl;
 		}
 		catch(int expn){
-			std::cout << "ERROR IDX: " << id << std::endl;
+			std::cout <<"PictureComparison::computeIdColor(), ERROR IDX: " << id << std::endl;
 		}
 
 	}
@@ -178,10 +171,10 @@ void PictureComparison::initFaceColorTable()
 void PictureComparison::extractFaceColor_()
 {
 	for (int i = 0; i < face_size_; ++i) {
-		string max_color_name = "Background";
-		int max_cnt = -1;
+		string max_color_name = "Unknown";
+		int max_cnt = 0;
 		for_each(face_color_counter_[i].begin(), face_color_counter_[i].end(), [&](pair<string, int> color_chip) {
-			if (color_chip.first.compare(string{ "Unknown" }) != 0) {
+			if (color_chip.first.compare(string{ "Unknown" }) != 0 && (color_chip.first.compare(string{ "BackGround" }) != 0)) {
 				if (max_cnt < color_chip.second) {
 					max_color_name = color_chip.first;
 					max_cnt = color_chip.second;

@@ -16,6 +16,8 @@
 #include <GeneralMesh.h>
 #include <GeneralMeshTexture.h>
 
+#include <GeneralUtility.h>
+
 #include <fstream>
 #include <sstream>
 
@@ -23,10 +25,10 @@ using namespace std;
 
 class PictureComparison {
 public:
+	PictureComparison(int face_size);
 	PictureComparison(int face_size, const std::string & tex_pic_name, const std::string & tex_faceid_name);
 	~PictureComparison();
 
-	static std::vector<std::string> ssplit(std::string input, char criteria = ' ');
 	void setColorTable(const std::string& full_path);
 	int decodeNormalizedNumeralSystem(glm::ivec3 val, int from = 255); // base is decimal
 	void computeIdColor();
