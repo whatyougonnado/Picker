@@ -1,5 +1,4 @@
 #include <GeneralUtility.h>
-#include "..\header\GeneralUtility.h"
 
 mg::ImageExtension mg::getType(const std::string & full_path)
 {
@@ -89,6 +88,7 @@ bool mg::saveTexData(std::shared_ptr<ImageInfo> image_info, const std::string & 
     }
 
     bool isFail;
+    mg::mkDir(full_path);
     ImageExtension extension = getType(full_path);
     switch (extension)
     {
@@ -109,8 +109,9 @@ bool mg::saveTexData(std::shared_ptr<ImageInfo> image_info, const std::string & 
 
 bool mg::writeTxt(std::vector<std::string> cache_list, const std::string & full_path)
 {
-    std::ofstream file(full_path);
+    mg::mkDir(full_path);
 
+    std::ofstream file(full_path);
     for (auto &iter : cache_list) {
         file << iter << std::endl;
     }
@@ -120,11 +121,17 @@ bool mg::writeTxt(std::vector<std::string> cache_list, const std::string & full_
 
 std::string mg::convertExtension(std::string filename, std::string extension)
 {
+    std::string converted;
+
     std::vector<std::string> token_list = ssplit(filename, '.');
     int extension_size = token_list.back().size();
-
-    std::string converted = filename.substr(0, filename.size() - extension_size);
-    converted += extension;
+    if (extension.size() == 0) {
+        converted = filename.substr(0, filename.size() - (extension_size + 1));
+    }
+    else {
+        converted = filename.substr(0, filename.size() - extension_size);
+        converted += extension;
+    }
 
     return converted;
 }
@@ -135,3 +142,32 @@ bool mg::checkFileExist(const char *filename)
     return infile.good();
 }
 
+std::string mg::getDir(std::string full_path) {
+    std::vector<std::string> sp_list = ssplit(full_path, '/');
+    std::string path = "";
+
+    for (auto sp : sp_list) {
+        if (sp.find(".") != std::string::npos) {
+            break;
+        }
+
+        path += sp + "/";
+    }
+
+    return path;
+}
+
+void mg::mkDir(std::string full_path)
+{
+    std::vector<std::string> sp_list = ssplit(full_path, '/');
+    std::string path = "";
+
+    for (auto sp : sp_list) {
+        if (sp.find(".") != std::string::npos) {
+            break;
+        }
+
+        path += sp + "/";
+        _mkdir(path.c_str());
+    }
+}

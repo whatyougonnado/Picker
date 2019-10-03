@@ -13,6 +13,8 @@
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 
+#include <direct.h>
+
 namespace mg {
     enum ImageExtension {
         BMP,
@@ -47,6 +49,9 @@ namespace mg {
     //true: can read and set 'imagename'
     //false: cannot read 'imagename'
     bool checkFileExist(const char *filename);
+    std::string getDir(std::string full_path);
 
+    //it is a Windows version
+    void mkDir(std::string full_path);
 
 }

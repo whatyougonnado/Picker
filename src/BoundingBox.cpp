@@ -33,6 +33,8 @@ int BoundingBox::saveTexBounded(const std::string& save_imagename) {
     int fail;
     std::array<int, 3> padding_pixel;
 
+    mg::mkDir(save_imagename);
+
     padding_pixel[R] = padding_pixel[G] = padding_pixel[B] = 0;
     getMargin_(padding_pixel);
     removePadding_();
@@ -173,7 +175,7 @@ int BoundingBox::setTexData(const std::string& imagename) {
     }
 
     
-    
+    mg::mkDir(imagename);
     image_info_->before_data = stbi_load(imagename.c_str(), &(image_info_->before_width), &(image_info_->before_height), &(image_info_->before_n_channels), 0);
 
     return 0;
@@ -191,6 +193,7 @@ int BoundingBox::saveTexData_(const std::string& save_imagename) {
         return 1;
     }
 
+    mg::mkDir(save_imagename);
     mg::ImageExtension extension = mg::getType(save_imagename);
     int fail = 1;
 
