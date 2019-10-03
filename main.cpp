@@ -22,7 +22,6 @@
 
 int main(int argc, char *argv[])
 {
-		//GeneralMeshTexture myGeneralMeshTexture(obj_full_path.c_str(), tex_full_path.c_str());
     bool isFront = false;
     std::string obj_path, obj_list_name, tex_path, tex_list_name, root_path;
     std::string in_line;
