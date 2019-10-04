@@ -20,14 +20,15 @@ public:
         int& bottom = value_container[3];
     };
     
-    BoundingBox();
     BoundingBox(const std::string& imagename);
     ~BoundingBox();
 
     int saveTexBounded(const std::string& save_imagename);
+    //if you want to change texture, use this function
     int setTexData(const std::string& imagename);
 
 private:
+    BoundingBox() = delete;
     std::shared_ptr<mg::ImageInfo> image_info_;
     Margin margin_;
     //set texture of the BoundingBox
@@ -45,5 +46,4 @@ private:
     void setTexInfoBefore_();
     //imageinfo after
     void setTexInfoBounded_();
-    int saveTexData_(const std::string& imagename);
 };

@@ -1,25 +1,32 @@
 #pragma once
+//
+//usage: 
+//1. myPictureComparison([n_face])  //
+//2. setColorTable(...)             //some colors that your classified image file has
+//3. initFaceColorTable();
+//4. In a for-loop, setTex([classfied image file], [face idx]) // for-loop must be ended when you merge all multiview images.
+//5.                computeIdxColor();
+//6.                save getFaceColor() to face color cache (you will use majority voting at ParsingMesh)
+//7. get color table for ParsingMesh
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <memory>
+#include <array>
+#include <map>
+#include <algorithm> // for for_each
 
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 #include <stb/stb_image_resize.h>
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <memory>
-#include <array>
-#include <map>
 
-#include <algorithm> // for_each
-
-#include <algorithm>
 #include <GeneralMesh.h>
 #include <GeneralMeshTexture.h>
 
 #include <GeneralUtility.h>
 
-#include <fstream>
-#include <sstream>
 
 using namespace std;
 
@@ -31,7 +38,7 @@ public:
 
     void setColorTable(const std::string& full_path);
     int decodeNormalizedNumeralSystem(glm::ivec3 val, int from = 255); // base is decimal
-    void computeIdColor();
+    void computeIdxColor();
 
     void setTex(const std::string & tex_pic_name, const std::string & tex_faceid_name);
 

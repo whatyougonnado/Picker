@@ -1,4 +1,4 @@
-#include "PictureComparison.h"
+#include "../header/PictureComparison.h"
 
 PictureComparison::PictureComparison(int face_size) : face_size_(face_size)
 {
@@ -55,7 +55,7 @@ int PictureComparison::decodeNormalizedNumeralSystem(glm::ivec3 val, int from)
     return id;
 }
 
-void PictureComparison::computeIdColor()
+void PictureComparison::computeIdxColor()
 {
     std::string color_name;
     glm::ivec3 color, encoded_id;
@@ -67,16 +67,14 @@ void PictureComparison::computeIdColor()
         for (int l = 0; l < 3; ++l) {
             color[l] = (int)tex_picture_.data[k/3];
             encoded_id[l] = (int)tex_faceid_.data[k + l];
-            //cout << encoded_id[l] << endl;
         }
 
-        //cout << color[0] << ", " << color[1] << ", " << color[2] << endl;
         color_name = getSynchronizedColorName_(color[0], color[1], color[2]);
 
         try {
             if (color_name == "ERROR") { // ERROR is occuring because of expanding picture
                 //need nearest neighbor(preserve hard edges) like photoshop
-                //cout << "void PictureComparison::computeIdColor() ERROR: There is color not included in color table" << endl;
+                //cout << "void PictureComparison::computeIdxColor() ERROR: There is color not included in color table" << endl;
                 throw k;
             }
         }
@@ -97,8 +95,6 @@ void PictureComparison::computeIdColor()
                 throw(id);
             }
             ++face_color_counter_[id][color_name];
-
-            //std::cout  << id  << ", " << color_name <<": " << face_color_counter_[id][color_name] << std::endl;
         }
         catch(int expn){
             std::cout <<"PictureComparison::computeIdColor(), ERROR IDX: " << id << std::endl;
@@ -141,17 +137,6 @@ std::string PictureComparison::getSynchronizedColorName_(unsigned char r, unsign
             return ret;
         }
     }
-
-    /*all_of(color_table_.begin(), color_table_.end(), [&](std::pair<string, array<unsigned char, 3>> color_chip) {
-        auto& colors = color_chip.second;
-        
-        if ((colors[0] == r) && (colors[1] == g) && (colors[2] == b)) {
-            ret = color_chip.first;
-            return false;
-        }
-        return true;
-    });*/
-
     return ret;
 }
 

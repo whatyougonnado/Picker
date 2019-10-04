@@ -1,4 +1,4 @@
-#include <BoundingBox.h>
+#include "../header/BoundingBox.h"
 
 BoundingBox::BoundingBox() {
     init_();
@@ -140,9 +140,8 @@ void BoundingBox::getMargin_(std::array<int, 3> lead_pixel) {
         ++row;
         margin_.bottom = (image_info_->before_height - 1) - row;
     }
-
-    //std::cout << margin_.top << " " << margin_.bottom << " " << margin_.left << " " << margin_.right << std::endl;
 }
+
 void BoundingBox::removePadding_() {
     setTexInfoBounded_();
 
@@ -185,30 +184,4 @@ void BoundingBox::setTexInfoBounded_() {
     image_info_->after_height = image_info_->before_height - (margin_.top + margin_.bottom);
     image_info_->after_n_channels = image_info_->before_n_channels;
     image_info_->after_data = new unsigned char[image_info_->after_width * image_info_->after_height * image_info_->after_n_channels];
-}
-int BoundingBox::saveTexData_(const std::string& save_imagename) {
-    if (checkFileExist_(save_imagename.c_str())) {
-        std::cout << "BoundingBox: " + save_imagename + "  file exist" << std::endl;
-
-        return 1;
-    }
-
-    mg::mkDir(save_imagename);
-    mg::ImageExtension extension = mg::getType(save_imagename);
-    int fail = 1;
-
-    switch (extension)
-    {
-    case mg::ImageExtension::BMP:
-        break;
-    case mg::ImageExtension::JPG:
-        break;
-    case mg::ImageExtension::PNG:
-        fail = stbi_write_png(save_imagename.c_str(), image_info_->after_width, image_info_->after_height, image_info_->after_n_channels, image_info_->after_data, 0);
-
-        break;
-    default:
-        break;
-    }
-    return fail;
 }

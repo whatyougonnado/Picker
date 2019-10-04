@@ -1,4 +1,4 @@
-#include <GeneralUtility.h>
+#include "../header/GeneralUtility.h"
 
 mg::ImageExtension mg::getType(const std::string & full_path)
 {

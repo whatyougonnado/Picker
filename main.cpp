@@ -4,7 +4,7 @@
 #include <Photographer.h>
 
 #include <GeneralMesh.h>
-#include <GeneralMeshID.h>
+#include <GeneralMeshIdx.h>
 #include <GeneralMeshTexture.h>
 #include <ParsingMesh.h>
 
@@ -38,16 +38,16 @@ void preprocessing_front() {
         GeneralMeshTexture myGeneralMeshTexture(obj_full_path.c_str(), tex_full_path.c_str());
 
         myPhotographer.setInit(&myGeneralMeshTexture);
-        myPhotographer.setShader(Shader::ShaderTypes::FULL_SHADER);
+        myPhotographer.setShader(Shader::ShaderTypes::TEXTURE_SHADER);
         myPhotographer.saveImageCamerasParamsCV(image_path, prefix);
         std::vector<std::string> texmesh_name_list = myPhotographer.renderToImages(image_path, "texmesh_view_" + prefix);
         mg::writeTxt(texmesh_name_list, image_path + "texmesh_name_list.txt");
         //myPhotographer.viewScene(true);
         //--------------------------------------------------------------------------------------------------------------------------
-        GeneralMeshID myGeneralMeshID(obj_full_path.c_str());
+        GeneralMeshIdx myGeneralMeshID(obj_full_path.c_str());
         myPhotographer.setObject(&myGeneralMeshID);
 
-        myPhotographer.setShader(Shader::ShaderTypes::FACEID_SHADER);
+        myPhotographer.setShader(Shader::ShaderTypes::FACEIDX_SHADER);
         myPhotographer.saveImageCamerasParamsCV(image_path, prefix);
         std::vector<std::string> id_name_list = myPhotographer.renderToImages(image_path, "id_view_" + prefix);
         mg::writeTxt(id_name_list, image_path + "id_name_list.txt");
@@ -114,11 +114,9 @@ void preprocessing_back() {
             std::string bound_id_full_path = image_path + bound_id_name_list[k];
 
             myPictureComparison.setTex(ce2p_texmesh_full_path, bound_id_full_path);
-            myPictureComparison.computeIdColor();
-
+            myPictureComparison.computeIdxColor();
 
             face_color = myPictureComparison.getFaceColor();
-            color_table = myPictureComparison.getColorTableFloat();
 
             std::cout << "  Merge (" << k+1 << "/" << n_segment << ") Picture" << std::endl;
 
@@ -145,7 +143,7 @@ void test() {
 
         Photographer myPhotographer;
         myPhotographer.setInit(&myGeneralMeshTextureTest);
-        myPhotographer.setShader(Shader::ShaderTypes::FULL_SHADER);
+        myPhotographer.setShader(Shader::ShaderTypes::TEXTURE_SHADER);
         myPhotographer.viewScene(true);
     }
 

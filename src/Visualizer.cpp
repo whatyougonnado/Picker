@@ -1,4 +1,4 @@
-#include <Visualizer.h>
+#include "../header/Visualizer.h"
 
 Visualizer::Visualizer() {
     init_();
