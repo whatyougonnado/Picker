@@ -119,16 +119,14 @@ void preprocessing_back() {
             face_color = myPictureComparison.getFaceColor();
 
             std::cout << "  Merge (" << k+1 << "/" << n_segment << ") Picture" << std::endl;
-
         }
         myPictureComparison.setColorTable(tex_path + "coloring_table_visualization.txt");
         color_table = myPictureComparison.getColorTableFloat();
 
         ParsingMesh myParsingObj(obj_full_path.c_str(), face_color, color_table);
         myParsingObj.saveOBJ(tex_path + "uv_coloring.txt", obj_path + "Parsing" + obj_list[i]);
-
-        std::cout << "\n\n//---------------------------------\n Preprocessing Back, done!\n//---------------------------------\n\n";
     }
+    std::cout << "\n\n//---------------------------------\n Preprocessing Back, done!\n//---------------------------------\n\n";
 }
 
 void test() {
@@ -171,7 +169,7 @@ int main(int argc, char *argv[])
     
     ////--------------------------------------------------------------------------------------
     ////preprocessing_middle()
-    ////CE2p
+    ////CE2P
     ////
     ////--------------------------------------------------------------------------------------
 

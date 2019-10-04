@@ -19,7 +19,8 @@ public:
         int& top = value_container[2];
         int& bottom = value_container[3];
     };
-    
+    //if you use default constructor, you should run setTexData(...)
+    BoundingBox();
     BoundingBox(const std::string& imagename);
     ~BoundingBox();
 
@@ -28,7 +29,6 @@ public:
     int setTexData(const std::string& imagename);
 
 private:
-    BoundingBox() = delete;
     std::shared_ptr<mg::ImageInfo> image_info_;
     Margin margin_;
     //set texture of the BoundingBox
