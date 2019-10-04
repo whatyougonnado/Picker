@@ -37,7 +37,7 @@ void preprocessing_front() {
         //--------------------------------------------------------------------------------------------------------------------------
         GeneralMeshTexture myGeneralMeshTexture(obj_full_path.c_str(), tex_full_path.c_str());
 
-        myPhotographer.setInit(&myGeneralMeshTexture);
+        myPhotographer.setTargetObject(&myGeneralMeshTexture);
         myPhotographer.setShader(Shader::ShaderTypes::TEXTURE_SHADER);
         myPhotographer.saveImageCamerasParamsCV(image_path, prefix);
         std::vector<std::string> texmesh_name_list = myPhotographer.renderToImages(image_path, "texmesh_view_" + prefix);
@@ -140,7 +140,7 @@ void test() {
         GeneralMeshTexture myGeneralMeshTextureTest(obj_full_path_test.c_str(), tex_full_path_test.c_str());
 
         Photographer myPhotographer;
-        myPhotographer.setInit(&myGeneralMeshTextureTest);
+        myPhotographer.setTargetObject(&myGeneralMeshTextureTest);
         myPhotographer.setShader(Shader::ShaderTypes::TEXTURE_SHADER);
         myPhotographer.viewScene(true);
     }
